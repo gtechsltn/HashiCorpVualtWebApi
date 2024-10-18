@@ -1,0 +1,60 @@
+# at Development Environment:
+{I have used podman}
+
+
+Step 1: make podman network:
+podman network create vault-network
+
+
+Step 2:  install 
+podman run --restart unless-stopped --name hashicorp_vault --cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=myroot' -e 'VAULT_DEV_LISTEN_ADDRESS=localhost:8200' -p 8200:8200 hashicorp/vault
+
+
+NB: must confirm installation mode
+-----------------------------------
+
+
+Step Finlly: after completed You must keep is : check log ..
+
+>podman logs hashicorp_vault
+
+then check:
+
+
+You may need to set the following environment variables:
+
+    $ export VAULT_ADDR='http://0.0.0.0:8200'
+
+The unseal key and root token are displayed below in case you want to
+seal/unseal the Vault or re-authenticate.
+
+"""""""""""""
+
+Unseal Key: ........=
+Root Token: ,,,,,,,,,
+
+"""""""""""""
+
+Development mode should NOT be used in production installations!
+
+
+
+============================================
+
+
+podman exec hashicorp_vault printenv | Select-String "VAULT_DEV_ROOT_TOKEN_ID"
+
+
+'VAULT_DEV_ROOT_TOKEN_ID=myroot'
+
+
+
+
+
+curl --header "X-Vault-Token: ......" --request GET http://127.0.0.1:8200/v1/kv/data/secret/myapp/config
+
+
+
+
+
+
